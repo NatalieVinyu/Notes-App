@@ -31,7 +31,20 @@ export const login = async (req, res) => {
     password
   });
 
-  if (error) return res.status(401).json({ error: error.message });
+  if (error) {
+    return res.status(401).json({ error: error.message });
+  } 
+
+  const token = data.session.access_token;
+
+  //SETTING COOKIE
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  })
+
+  res.json({ message: "Login successful" });
 
   res.json({
     access_token: data.session.access_token,
@@ -41,7 +54,10 @@ export const login = async (req, res) => {
 }
 
 // LOGOUT
-export const logout = async (req, res) => {
+export const logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
+  
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token)

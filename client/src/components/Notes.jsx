@@ -18,9 +18,14 @@ function Notes() {
 
       const res = await api.get("/notes");
       setNotes(res.data || []);
+
     } catch (err) {
-      setError("Failed to load notes");
-      console.error(err);
+      if (err.response?.status === 401) {
+        setError("Session expired. Please login again.");
+        console.error("AUTH ERROR");
+      } else {
+        setError("Failed to load notes");
+      } 
     } finally {
       setLoading(false);
     }
@@ -33,17 +38,17 @@ function Notes() {
   //---------- CREATE NEW NOTE -------------
   const addNote = async () => {
     if (!newNote.trim()) {
-      setError("Please enter a note");
+      setError(' ');
       return;
     }
 
     try {
-      await api.post('/notes', {
+      const res = await api.post('/notes', {
         content: newNote.trim(),
       });
 
+      setNotes(prev => [res.data[0], ...prev]);
       setNewNote("");
-      loadNotes();
     } catch (err) {
       console.error("Add note error:", err.response?.data || err);
     }
@@ -60,9 +65,16 @@ function Notes() {
         content: editText,
       });
 
+      setNotes(prev =>
+        prev.map(note =>
+          note.id === editingId
+            ? { ...note, content: editText }
+            : note
+        )
+      );
+
       setEditingId(null);
       setEditText("");
-      loadNotes();
     } catch (err) {
       console.error("Update error:", err);
     }
@@ -77,7 +89,9 @@ function Notes() {
   const deleteNote = async (id) => {
     try {
       await api.delete(`/notes/${id}`);
-      loadNotes();
+
+      setNotes(prev => prev.filter(note => note.id !== id));
+      
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -134,7 +148,6 @@ function Notes() {
                 >
                   Edit
                 </button>
-
                 <button
                   onClick={() => deleteNote(note.id)}
                   className='text-sm text-red-500 hover:underline pl-4'
@@ -146,6 +159,10 @@ function Notes() {
           </li>
         ))}
       </ul>
+
+      {!loading && notes.length === 0 && (
+        <p className='text-gray-500'>No notes yet</p>
+      )}
     </div>
   )
 }

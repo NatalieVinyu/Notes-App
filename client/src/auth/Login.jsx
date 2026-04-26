@@ -19,8 +19,6 @@ function Login() {
         password
       })
 
-      localStorage.setItem("token", data.session.access_token);
-
     if (error) {
       setMessage(`Error: ${error.message}`)
     } else {
