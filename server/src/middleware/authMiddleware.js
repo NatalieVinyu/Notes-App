@@ -1,3 +1,4 @@
+//authMiddleware.js
 import { supabaseAdmin } from "../config/supabaseClient.js";
 
 export const authenticate = async (req, res, next) => {
