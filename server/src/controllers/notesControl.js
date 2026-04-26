@@ -14,9 +14,18 @@ export const getNotes = async (req, res) => {
 
 // CREATE NOTE
 export const createNote = async (req, res) => {
-  const { title, content } = req.body;
+  try {
+    const { content } = req.body;
+    const user = req.user;
 
-  const { data, error } = await supabaseAdmin
+    console.log("BODY:", req.body);
+    console.log("USER:", user);
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: "Content is required" });
+    }
+
+    const { data, error } = await supabaseAdmin
     .from("notes")
     .insert([
       {
@@ -26,9 +35,16 @@ export const createNote = async (req, res) => {
     ])
     .select();
 
-  if (error) return res.status(400).json({ error: error.message });
+  if (error) {
+    console.error("Supabase error:", error);
+    return res.status(400).json({ error: error.message });
+  }
 
   res.status(201).json(data);
+  } catch (err) {
+    console.error("Server error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // UPDATE NOTE

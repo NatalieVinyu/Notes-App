@@ -1,107 +1,93 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../supabaseClient'
+import { useEffect, useState } from 'react';
+import api from '../services/api';
 
 function Notes() {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [editText, setEditText] = useState('') //ADD EDIT STATE
-  const [editingId, setEditingId] = useState(null)
+  const [notes, setNotes] = useState([]);
+  const [newNote, setNewNote] = useState('');
+  const [editText, setEditText] = useState(''); //ADD EDIT STATE
+  const [editingId, setEditingId] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // -------- FETCH NOTES -------- //
+  const loadNotes = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const res = await api.get("/notes");
+      setNotes(res.data || []);
+    } catch (err) {
+      setError("Failed to load notes");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadNotes = async () => {
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
+    loadNotes();
+  }, []);
 
-      console.log('Fetching notes for user:', user)
-
-      if (session?.user) {
-        getNotes()
-      }
-    }
-    loadNotes()
-  }, [])
-
-  async function getNotes() {
-    const { data, error } = await supabase
-      .from('notes')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching notes:', error)
-    } else {
-      setNotes(data || [])
-      console.log('Supabase working:', data)
-    }
-  }
-
-  // INSERT FUNCTION
+  //---------- CREATE NEW NOTE -------------
   const addNote = async () => {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-
-    console.log('Current user:', user)
-
-    if (!user) {
-      console.error('User not logged in')
-      return
+    if (!newNote.trim()) {
+      setError("Please enter a note");
+      return;
     }
 
-    const {error} = await supabase
-      .from('notes')
-      .insert([{ content: newNote, user_id: user.id}])
+    try {
+      await api.post('/notes', {
+        content: newNote.trim(),
+      });
 
-    if (error) {
-      console.error(error)
-    } else {
-      setNewNote('')
-      getNotes() // REFRESH LIST
+      setNewNote("");
+      loadNotes();
+    } catch (err) {
+      console.error("Add note error:", err.response?.data || err);
     }
-  }
 
-  // UPDATE FUNCTION
+    console.log("NEW NOTE:", newNote);
+  };
+
+  //----------- UPDATE --------------
   const updateNote = async () => {
-    if (!editText.trim()) return
+    if (!editText.trim()) return;
 
-    const {error} = await supabase
-    .from('notes')
-    .update({ content: editText })
-    .eq('id', editingId)
+    try {
+      await api.put(`/notes/${editingId}`, {
+        content: editText,
+      });
 
-    if (error) {
-      console.error('Error updating note:', error)
-    } else {
-      setEditingId(null)
-      setEditText('')
-      getNotes()
+      setEditingId(null);
+      setEditText("");
+      loadNotes();
+    } catch (err) {
+      console.error("Update error:", err);
     }
-  }
+  };
 
   const startEdit = (note) => {
-    setEditingId(note.id)
-    setEditText(note.content)
-  }
+    setEditingId(note.id);
+    setEditText(note.content);
+  };
 
-  // DELETE FUNCTION
+  //---------- DELETE --------------
   const deleteNote = async (id) => {
-    const { error } = await supabase
-    .from('notes')
-    .delete()
-    .eq('id', id)
-
-    if (error) {
-      console.error('Error deleting note:', error)
-    } else {
-      getNotes() //refresh list
+    try {
+      await api.delete(`/notes/${id}`);
+      loadNotes();
+    } catch (err) {
+      console.error("Delete error:", err);
     }
-  }
+  };
 
   return (
     <div className='m-4'>
       <h1 className='text-3xl pb-8'>Supabase Test</h1>
 
+    {/* INPUT */}
       <input 
         type="text"
         value={newNote}
@@ -114,8 +100,13 @@ function Notes() {
         Add Note
       </button>
 
+      {/* STATES */}
+      {loading && <p>Loading notes...</p>}
+      {error && <p className='text-red-500'>{error}</p>}
+
+    {/* LIST */}
       <ul className='space-y-2'>
-        {notes.map(note => (
+        {notes.map((note) => (
           <li 
             key={note.id}
             className='flex items-center justify-between bg-gray-50 p-3 rounded-lg border'

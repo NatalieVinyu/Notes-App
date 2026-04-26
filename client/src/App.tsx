@@ -1,8 +1,9 @@
 import React from 'react'
-import Notes from './components/Notes'
-import SignUp from './components/SignUp'
-import LoginForm from './components/LoginForm'
 import { supabase } from './supabaseClient'
+import Notes from './components/Notes'
+import SignUp from './auth/SignUp'
+import Login from './auth/Login'
+import ResetPassword from './auth/ResetPassword'
 
 function App() {
   const handleLogout = async () => {
@@ -27,7 +28,8 @@ function App() {
       </button>
 
       <SignUp />
-      <LoginForm />
+      <Login />
+      <ResetPassword />
       <Notes />
     </div>
   )
