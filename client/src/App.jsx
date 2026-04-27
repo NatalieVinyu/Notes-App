@@ -3,31 +3,45 @@ import api from "./services/api";
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Navbar from './components/Navbar';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
   const [authMode, setAuthMode] = useState("login");
-
-  useEffect(() => {
+  const [user, setUser] = useState(null);
+  
     const checkAuth = async () => {
       try {
-        await api.get("/auth/me");
+        const res = await api.get("/auth/me");
         setIsAuth(true);
+        setUser(res.data);
       } catch (err) {
         setIsAuth(false);
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
+
+    useEffect(() => {
       checkAuth();
     }, []);
 
     //--------- LOGGING OUT----------------
   const handleLogout = async () => {
+    try {
     await api.post("/auth/logout");
+    } catch (err) {
+      console.log(err);
+    }
+
     setIsAuth(false);
+    setUser(null);
     setAuthMode("login");
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("auth");
   };
 
     if (loading) return <p>Loading...</p>
@@ -36,12 +50,12 @@ function App() {
     if (!isAuth) {
       return authMode === "login" ? ( 
         <Login 
-          onLoginSuccess={() => setIsAuth(true)} 
+          onLoginSuccess={checkAuth} 
           goToSignup={() => setAuthMode("signup")}
         />
       ) : (
         <SignUp
-          onSignupSuccess={() => setIsAuth(true)}
+          onSignupSuccess={checkAuth}
           goToLogin={() => setAuthMode("login")} 
         />
       );
@@ -49,18 +63,16 @@ function App() {
 
   //AUTHENTICATED
   return (
-    <div className='m-10'>
-      <h1 className='text-3xl'>Notes App</h1>
-      <button
-        onClick={handleLogout}
-        className='text-red-500 hover:undeline pb-4'
-      >
-        Logout
-      </button>
+    <div className='min-h-screen bg-stone-50'>
+      {/* NAVBAR WITH LOGOUT BUTTON */}
+      <Navbar user={user} onLogout={handleLogout} />
 
-      <Dashboard />
+      {/* DASHBOARD */}
+      <div className='p-6'>
+        <Dashboard />
+      </div>
     </div>
   )
 }
 
-export default App
+export default App;
