@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import api from '../services/api'
 
-function Login() {
+function Login({ onLoginSuccess, goToSignup }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -10,18 +10,22 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await api.post("/auth/login", {
+      await api.post("/auth/login", {
         email,
         password
       });
 
       setMessage("Login successful");
+      onLoginSuccess();
       window.location.href = "/notes";
 
     } catch (err) {
       setMessage(err.response?.data?.error || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,6 +59,14 @@ function Login() {
       </button>
 
       <p className="text-sm text-gray-600">{message}</p>
+
+      <button
+        type="button"
+        onClick={goToSignup}
+        className='text-blue-500 underline'
+      >
+        Don't have an account? Sign up
+      </button>
     </form>
     </div>
 

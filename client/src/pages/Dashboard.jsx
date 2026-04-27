@@ -9,6 +9,10 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+      loadNotes();
+    }, []);
+
   // -------- FETCH NOTES -------- //
     const loadNotes = async () => {
       try {
@@ -29,10 +33,6 @@ function Dashboard() {
         setLoading(false);
       }
     };
-
-    useEffect(() => {
-      loadNotes();
-    }, []);
 
     const handleCreate = (note) => {
       setNotes(prev => [note, ...prev]);

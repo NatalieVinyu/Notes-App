@@ -7,7 +7,7 @@ function NotesForm({ newNote, setNewNote, onNoteCreated, setError }) {
 
   //---------- CREATE NEW NOTE -------------
     const addNote = async () => {
-      if (!newNote.trim()) {
+      if (!newNote || !newNote.trim()) {
         setError('Note cannot be empty');
         return;
       }
@@ -17,11 +17,10 @@ function NotesForm({ newNote, setNewNote, onNoteCreated, setError }) {
           content: newNote.trim(),
         });
   
-        onNoteCreated(res.data[0]);
+        onNoteCreated(res.data);
         setNewNote("");
-        setError("")
       } catch (err) {
-        console.error("Add note error:", err.response?.data || err);
+        console.error(err);
         setError("Failed to add note");
       }
   

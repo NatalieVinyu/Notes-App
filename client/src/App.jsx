@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 function App() {
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -26,14 +27,27 @@ function App() {
   const handleLogout = async () => {
     await api.post("/auth/logout");
     setIsAuth(false);
+    setAuthMode("login");
   };
 
     if (loading) return <p>Loading...</p>
 
+    // NOT AUTHENTICATED
     if (!isAuth) {
-      return <Login onLoginSuccess={() => setIsAuth(true)} />;
-    } 
+      return authMode === "login" ? ( 
+        <Login 
+          onLoginSuccess={() => setIsAuth(true)} 
+          goToSignup={() => setAuthMode("signup")}
+        />
+      ) : (
+        <SignUp
+          onSignupSuccess={() => setIsAuth(true)}
+          goToLogin={() => setAuthMode("login")} 
+        />
+      );
+    };
 
+  //AUTHENTICATED
   return (
     <div className='m-10'>
       <h1 className='text-3xl'>Notes App</h1>
@@ -44,7 +58,6 @@ function App() {
         Logout
       </button>
 
-      <SignUp />
       <Dashboard />
     </div>
   )

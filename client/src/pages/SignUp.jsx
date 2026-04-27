@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import api from "../services/api";
 
-function SignUp() {
+function SignUp({ onSignupSuccess, goToLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -13,18 +13,25 @@ function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     try {
+      // CREATE USER
       await api.post("/auth/signup", {
         email,
         password,
       });
 
+      //AUTO LOGIN
+      await api.post("/auth/login", {
+        email,
+        password,
+      });
+
+      onSignupSuccess();
+
       setMessage("Account created! You can now log in.");
       } catch (err) {
       setMessage(err.response?.data?.error || "Signup failed");
-      } finally {
       setLoading(false);
       }
     }; 
@@ -58,6 +65,12 @@ function SignUp() {
       </button>
 
       {message && <p>{message}</p>}
+
+      <button
+        type='button'
+        onClick={goToLogin}
+        className='text-blue-500 underline'
+      >Already have an account? Log in</button>
     </form>
   );
 }
