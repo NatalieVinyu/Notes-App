@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await api.get("/notes");
+        await api.get("/auth/me");
         setIsAuth(true);
       } catch (err) {
         setIsAuth(false);
