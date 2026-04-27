@@ -16,7 +16,10 @@ export const signup = async (req, res) => {
 
   if (error) return res.status(400).json({ error: error.message });
 
-  res.status(201).json({ user: data.user });
+  return res.status(201).json({ 
+    message: "User created successfully", 
+    user: data.user ,
+  });
 };
 
 // LOGIN
@@ -31,41 +34,21 @@ export const login = async (req, res) => {
     password
   });
 
-  if (error) {
-    return res.status(401).json({ error: error.message });
-  } 
-
-  const token = data.session.access_token;
+  if (error) return res.status(401).json({ error: error.message });
 
   //SETTING COOKIE
-  res.cookie("token", token, {
+  res.cookie("token", data.session.access_token, {
     httpOnly: true,
     secure: false,
-    sameSite: "lax",
+    sameSite: "strict",
+    maxAge: 1000 * 60 * 60 * 24,
   })
 
-  res.json({ message: "Login successful" });
-
-  res.json({
-    access_token: data.session.access_token,
-    refresh_token: data.session.refresh_token,
-    user: data.user
-  })
+  res.json({ message: "Login successful", user: data.user });
 }
 
 // LOGOUT
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   res.clearCookie("token");
-  res.json({ message: "Logged out" });
-  
-  const token = req.headers.authorization?.split(' ')[1];
-
-  if (!token)
-    return res.status(401).json({ error: 'Unauthorized' });
-
-  const { error } = await supabaseAdmin.auth.admin.signOut(token);
-
-  if (error) return res.status(400).json({ error: error.message });
-
-  res.json({ message: 'Logged out successfully' });
+  return res.json({ message: "Logged out successfully" })
 };

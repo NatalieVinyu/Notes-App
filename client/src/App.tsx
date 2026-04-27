@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
+import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
@@ -44,6 +45,7 @@ function App() {
         Logout
       </button>
 
+      <SignUp />
       <Dashboard />
     </div>
   )

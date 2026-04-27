@@ -1,3 +1,4 @@
+// AUTHROUTES.JS
 import express from 'express';
 import { signup, login, logout } from '../controllers/authControl.js'
 

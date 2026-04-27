@@ -1,7 +1,7 @@
 //SignUp.jsx
+import React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
-import { supabase } from '../supabaseClient';
+import api from "../services/api";
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -9,28 +9,25 @@ function SignUp() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  //-------------SIGN UP--------------
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
+    try {
+      await api.post("/auth/signup", {
+        email,
+        password,
+      });
 
-    if (error) {
-      setMessage(`Error: ${error.message}`);
-    } else {
-      setMessage('Signup successful! Please check your email to confirm.');
-
-      if (data.session) {
-        localStorage.setItem("token", data.session.access_token);
+      setMessage("Account created! You can now log in.");
+      } catch (err) {
+      setMessage(err.response?.data?.error || "Signup failed");
+      } finally {
+      setLoading(false);
       }
-    } 
-
-    setLoading(false);
-  };
+    }; 
 
   return (
     <form onSubmit={handleSignUp} className='flex flex-col gap-3 max-w-sm'>
@@ -60,7 +57,7 @@ function SignUp() {
         {loading ? "Signing up..." : "Sign Up"}
       </button>
 
-      <p className='text-sm text-gray-600'>{message}</p>
+      {message && <p>{message}</p>}
     </form>
   );
 }
