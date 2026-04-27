@@ -40,8 +40,8 @@ export const login = async (req, res) => {
   res.cookie("token", data.session.access_token, {
     httpOnly: true,
     secure: false,
-    sameSite: "strict",
-    maxAge: 1000 * 60 * 60 * 24,
+    sameSite: "lax",
+    path: "/",
   })
 
   res.json({ message: "Login successful", user: data.user });

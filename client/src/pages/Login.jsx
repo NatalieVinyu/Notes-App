@@ -1,6 +1,6 @@
 // LOGIN.JSX
 import { useState } from 'react';
-import { supabase } from '../supabaseClient';
+import api from '../services/api'
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -10,29 +10,18 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const res = await api.post("/auth/login", {
         email,
         password
-      })
-
-    if (error) {
-      setMessage(`Error: ${error.message}`)
-    } else {
-      const token = data.session.access_token;
-      localStorage.setItem("token", token);
+      });
 
       setMessage("Login successful");
       window.location.href = "/notes";
-      }
+
     } catch (err) {
-      console.error("LOGIN ERROR:", err);
-      setMessage("Something went wrong");
-    } finally {
-      setLoading(false);
+      setMessage(err.response?.data?.error || "Login failed");
     }
   };
 
