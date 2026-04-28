@@ -12,7 +12,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://notes-app-1-vgdc.onrender.com"
+    ],
     credentials: true
   })
 );
