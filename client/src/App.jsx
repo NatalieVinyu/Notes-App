@@ -3,6 +3,7 @@ import { supabase } from './supabaseClient';
 import api from "./services/api";
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 import { BallTriangle } from "react-loader-spinner";
@@ -15,7 +16,10 @@ function App() {
   
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
+      
+      console.log("SESSION:", data.session)
 
+      setUser(data.session?.user || null);
       setIsAuth(!!data.session);
       setLoading(false);
     };
@@ -25,10 +29,15 @@ function App() {
 
       const { data: listener } = supabase.auth.onAuthStateChange(
         (event, session) => {
+          if (session) {
           setIsAuth(!!session);
+        } else {
+          setIsAuth(false);
+          setUser(null);
         }
-      );
-
+        setLoading(false);
+     });
+ 
       return () => {
         listener.subscription.unsubscribe()
       };
@@ -61,23 +70,29 @@ function App() {
             visible={true}
           />
         </div>
-        
       )
     }
 
     // NOT AUTHENTICATED
     if (!isAuth) {
-      return authMode === "login" ? ( 
-        <Login 
-          onLoginSuccess={checkAuth} 
-          goToSignup={() => setAuthMode("signup")}
+      if (authMode === "reset") return ( 
+        <ResetPassword 
+          onResetSuccess={() => setAuthMode("login")}
         />
-      ) : (
+      );
+      if (authMode === "signup") return (
         <SignUp
           onSignupSuccess={checkAuth}
           goToLogin={() => setAuthMode("login")} 
         />
       );
+      return (
+        <Login
+          onLoginSuccess={checkAuth}
+          goToSignup={() => setAuthMode("signup")}
+          goToReset={() => setAuthMode("reset")}
+        />
+      )
     };
 
   //AUTHENTICATED
@@ -87,7 +102,7 @@ function App() {
       <Navbar user={user} onLogout={handleLogout} />
 
       {/* DASHBOARD */}
-      <div className='p-6'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 py-8'>
         <Dashboard />
       </div>
     </div>

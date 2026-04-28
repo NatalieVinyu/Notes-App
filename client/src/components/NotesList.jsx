@@ -8,7 +8,7 @@ function NotesList({ notes, onUpdate, onDelete, loading }) {
       return (
         <div className="flex justify-center mt-10">
           <BallTriangle
-            height={0}
+            height={50}
             width={50}
             radius={5}
             color="#4fa94d"
@@ -26,7 +26,7 @@ function NotesList({ notes, onUpdate, onDelete, loading }) {
   }
 
   return (
-    <ul className="space-y-3 mt-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
       {notes.map((note) => (
         <NotesItem
           key={note.id}
@@ -35,7 +35,7 @@ function NotesList({ notes, onUpdate, onDelete, loading }) {
           onDelete={onDelete}
         />
       ))}
-    </ul>
+    </div>
   );
 }
 

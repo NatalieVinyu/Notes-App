@@ -49,61 +49,58 @@ function NotesItem({ note, onUpdate, onDelete }) {
     }) : "";
 
   return (
-    <div>
-      {/* LIST */}
-      <li className="bg-white border border-stone-200 rounded-xl p-4 shadow-sm hover:shadow-md transition flex items-center justify-between mb-6">
+      <div className="bg-white border border-stone-200 rounded-xl p-4 hover:border-stone-300 transition flex flex-col gap-3">
 
         {editingId ? (
-        <div className="flex gap-2 w-full">
+          <div className="flex gap-2">
+            <input
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="flex-1 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+            />
 
-          <input
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            className="flex-1 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
-
-          <button
-            onClick={updateNote}
-            className="bg-green-500 text-white px-4 py-4 rounded-lg hover:bg-green-600 transition"
-          >
-            Save
-          </button>
-        </div>
-      ) : (
-        <>
+            <button
+              onClick={updateNote}
+              className="bg-green-500 text-white px-4 py-4 rounded-lg hover:bg-green-600 transition text-sm"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setIsEditing(false)}
+              className="px-3 py-2 border border-stone-200 rounded-lg hover:bg-stone-50 transition text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+        <div>
           {/* NOTE TEXT */}
-          <div className='flex flex-col'>
-            <span className="text-gray-800 text-sm font-semibold">
+            <p className="text-sm text-stone-800 leading-relaxed flex-1">
               {note.content}
-            </span>
-            <span className='text-xs text-gray-400 mt-1'>
-              {formattedDate}
-            </span>
-          </div>
-          
-
-          {/* ACTIONS */}
-          <div className="flex items-center gap-2 ml-4">
-
-            <button
-              onClick={startEdit}
-              className="text-sm px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
-            >
-              <FaPen />
-            </button>
-
-            <button
-              onClick={deleteNote}
-              className="text-sm px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
-            >
-              <MdDeleteForever />
-            </button>
-          </div>
-        </>
-      )}
-    </li>
-    </div>
-  )
+            </p>
+            <div className='flex items-center justify-between border-t border-stone-100 pt-3'>
+              <span className='text-xs text-gray-400'>
+                {formattedDate}
+              </span>
+              <div className='flex gap-2'>
+                <button
+                  onClick={startEdit}
+                  className="text-sm px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                >
+                  <FaPen size={12} />
+                </button>
+                <button
+                  onClick={deleteNote}
+                  className="text-sm px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+                >
+                  <MdDeleteForever size={14} />
+                </button>
+              </div>
+            </div>
+        </div>
+        )}
+      </div>    
+  );
 }
 
 export default NotesItem;

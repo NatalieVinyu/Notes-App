@@ -1,14 +1,15 @@
 // LOGIN.JSX
-import { useState } from 'react';
+import { use, useState } from 'react';
 import api from '../services/api'
 import { supabase } from '../supabaseClient';
 
-function Login({ onLoginSuccess, goToSignup }) {
+function Login({ onLoginSuccess, goToSignup, goToReset }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -83,16 +84,28 @@ function Login({ onLoginSuccess, goToSignup }) {
             <p className={`text-sm text-center mt-2 ${message.includes("successful") ? "text-green-600" : "text-red-500"}`}>{message}</p>
           )}
 
-          <span className='flex gap-2'>
-            Don't have an account?
+          <div className='flex flex-col items-center gap-2 mt-4 text-sm'>
+          {/* SIGNUP LINK */}
+            <p className='text-stone-500'>
+              Don't have an account?
+              <button
+              type='button'
+              onClick={goToSignup}
+              className='text-blue-500 underline cursor-pointer'
+              > 
+                Sign up
+              </button>
+            </p>
+
+            {/* FORGOT PASSWORD LINK */}
             <button
-            type='button'
-            onClick={goToSignup}
-            className='text-blue-500 underline cursor-pointer'
-            > 
-              Sign in
-            </button>
-          </span>
+                type='button'
+                onClick={goToReset}
+                className='text-blue-500 underline cursor-pointer'
+              >
+                Forgot Password?
+              </button>
+          </div>
 
         </form>   
       </div>

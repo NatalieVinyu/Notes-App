@@ -49,14 +49,13 @@ function Dashboard() {
     };
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='w-full max-w-screen bg-white rounded-2xl shadow-lg p-8'>
+      <div className='w-full max-w-4xl mx-auto px-4 sm:px-6 py-8'>
         <NotesForm 
           onNoteCreated={handleCreate}
           setError={setError}
         />
 
-        {error && <p className='text-red-500'>{error}</p>}
+        {error && <p className='text-sm mt-3 text-red-500'>{error}</p>}
 
         <NotesList 
           notes={notes}
@@ -65,8 +64,6 @@ function Dashboard() {
           loading={loading}
         />
       </div>
-
-    </div>
   );
 }
 

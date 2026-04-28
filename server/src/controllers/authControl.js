@@ -53,6 +53,7 @@ export const logout = async (req, res) => {
   return res.json({ message: "Logged out successfully" })
 };
 
+// ME
 export const me = (req, res) => {
   res.json({ user: req.user });
 };

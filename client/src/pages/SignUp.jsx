@@ -2,6 +2,7 @@
 import React from 'react';
 import { useState } from 'react';
 import api from "../services/api";
+import { supabase } from '../supabaseClient';
 
 function SignUp({ onSignupSuccess, goToLogin }) {
   const [email, setEmail] = useState('');
@@ -16,25 +17,19 @@ function SignUp({ onSignupSuccess, goToLogin }) {
 
     try {
       // CREATE USER
-      await api.post("/auth/signup", {
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
-
-      //AUTO LOGIN
-      await api.post("/auth/login", {
-        email,
-        password,
-      });
-
-      onSignupSuccess();
-
-      setMessage("Account created! You can now log in.");
-      } catch (err) {
-      setMessage(err.response?.data?.error || "Signup failed");
+      if (error) throw error;
+      await onSignupSuccess();
+    } catch (err) {
+      setMessage(err.message || "Signup failed");
+    } finally {
       setLoading(false);
-      }
-    }; 
+    }
+  }
+
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-stone-50'>
@@ -88,7 +83,7 @@ function SignUp({ onSignupSuccess, goToLogin }) {
             <p className={`text-sm text-center mt-2 ${message.includes("successful") ? "text-green-600" : "text-red-500"}`}>{message}</p>
           )}
 
-          <span className='flex gap-2'>
+          <p className='flex gap-2'>
             Already have an account?
             <button
             type='button'
@@ -97,7 +92,7 @@ function SignUp({ onSignupSuccess, goToLogin }) {
             > 
               Log in
             </button>
-          </span>
+          </p>
 
         </form>
       </div>
