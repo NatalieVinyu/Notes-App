@@ -120,7 +120,4 @@ npm run dev
 This project was built to practice full-stack development concepts including authentication, protected routes, REST APIs, and database integration using Supabase.
 
 ---
-```
-
----
 
