@@ -1,5 +1,6 @@
 //NAVBAR.JSX
 import { useEffect, useState } from "react";
+import { FiLogOut } from "react-icons/fi";
 
 function Navbar({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -54,10 +55,10 @@ function Navbar({ onLogout }) {
           {/* LOGOUT */}
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white text-sm px-3 py-2 rounded-lg
+            className="flex items-center gap-1 font-bold bg-red-500 text-white text-sm px-3 py-2 rounded-lg
             hover:bg-red-700 transition cursor-pointer"
           >
-            Log out
+            <FiLogOut /> Log out
           </button>
 
         </div>

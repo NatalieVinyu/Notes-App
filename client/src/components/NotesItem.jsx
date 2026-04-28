@@ -2,6 +2,8 @@
 import React from 'react';
 import { useState } from 'react';
 import api from '../services/api';
+import { FaPen } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 
 function NotesItem({ note, onUpdate, onDelete }) {
   const [editText, setEditText] = useState(''); 
@@ -85,16 +87,16 @@ function NotesItem({ note, onUpdate, onDelete }) {
 
             <button
               onClick={startEdit}
-              className="text-sm px-3 py-1 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+              className="text-sm px-3 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
             >
-              Edit
+              <FaPen />
             </button>
 
             <button
               onClick={deleteNote}
-              className="text-sm px-3 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+              className="text-sm px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
             >
-              Delete
+              <MdDeleteForever />
             </button>
           </div>
         </>
