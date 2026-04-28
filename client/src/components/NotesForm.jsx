@@ -43,9 +43,10 @@ const [newNote, setNewNote] = useState("");
   return (
     <div>
       {/* HEADER */}
-      <div className='flex justify-between'>
-        <h1 className='text-3xl'>Your Notes</h1>
-        <button onClick={() => setShowModal(true)} className='bg-green-100 hover:bg-green-50 cursor-pointer p-2'>
+      <div className='flex items-center justify-between mb-6'>
+        <h1 className='text-3xl font-semibold text-stone-800'>Your Notes</h1>
+
+        <button onClick={() => setShowModal(true)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition cursor-pointer p-2'>
           + New Note
         </button>
       </div>
@@ -80,8 +81,6 @@ const [newNote, setNewNote] = useState("");
 
         </div>
       )}
-
-      
     </div>
   )
 }

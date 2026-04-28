@@ -49,21 +49,24 @@ function Dashboard() {
     };
 
   return (
-    <div>
+    <div className='flex items-center justify-center'>
+      <div className='w-full max-w-screen bg-white rounded-2xl shadow-lg p-8'>
+        <NotesForm 
+          onNoteCreated={handleCreate}
+          setError={setError}
+        />
 
-      <NotesForm 
-        onNoteCreated={handleCreate}
-        setError={setError}
-      />
+        {error && <p className='text-red-500'>{error}</p>}
 
-      {error && <p className='text-red-500'>{error}</p>}
+        <NotesList 
+          notes={notes}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+          loading={loading}
+        />
+      </div>
 
-      <NotesList 
-        notes={notes}
-        onUpdate={handleUpdate}
-        onDelete={handleDelete}
-        loading={loading}
-      />
+      
       
     </div>
   );
