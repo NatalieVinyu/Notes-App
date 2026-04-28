@@ -34,7 +34,7 @@ function Login({ onLoginSuccess, goToSignup }) {
         {/* HEADER */}
         <div className='text-center mb-8'>
           <h1 className='text-3xl font-semibold text-stone-800'>Welcome back!</h1>
-          <p className='text-sm text-stone-500 mt-1'>Sign in to your account</p>
+          <p className='text-sm text-stone-500 mt-1'>Log in to your account</p>
         </div>
 
         {/* FORM */}
@@ -45,7 +45,7 @@ function Login({ onLoginSuccess, goToSignup }) {
             <label className='block text-xs font-medium text-stone-600 mb-1'>EMAIL</label>
             <input
               type="email"
-              placeholder="you@example.com"
+              placeholder="your@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -80,13 +80,17 @@ function Login({ onLoginSuccess, goToSignup }) {
             <p className={`text-sm text-center mt-2 ${message.includes("successful") ? "text-green-600" : "text-red-500"}`}>{message}</p>
           )}
 
-          <button
-            type="button"
+          <span className='flex gap-2'>
+            Don't have an account?
+            <button
+            type='button'
             onClick={goToSignup}
-            className='text-blue-500 underline'
-          >
-            Don't have an account? Sign up
-          </button>
+            className='text-blue-500 underline cursor-pointer'
+            > 
+              Sign in
+            </button>
+          </span>
+
         </form>   
       </div>
     

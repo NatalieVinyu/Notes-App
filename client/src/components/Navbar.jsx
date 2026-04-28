@@ -55,9 +55,9 @@ function Navbar({ onLogout }) {
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white text-sm px-3 py-2 rounded-lg
-            hover:bg-red-600 transition"
+            hover:bg-red-700 transition cursor-pointer"
           >
-            Logout
+            Log out
           </button>
 
         </div>
