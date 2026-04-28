@@ -17,11 +17,8 @@ function Navbar({ onLogout }) {
       return () => window.removeEventListener("storage", syncUser);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("auth");
-    onLogout?.();
-    window.location.href = "/";
+  const handleLogout = async () => {
+    await onLogout();
   };
 
   return (

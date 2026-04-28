@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { supabase } from './supabaseClient';
 import api from "./services/api";
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
@@ -13,29 +14,29 @@ function App() {
   const [user, setUser] = useState(null);
   
     const checkAuth = async () => {
-      try {
-        const res = await api.get("/auth/me");
-        setIsAuth(true);
-        setUser(res.data);
-      } catch (err) {
-        setIsAuth(false);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
+      const { data } = await supabase.auth.getSession();
+
+      setIsAuth(!!data.session);
+      setLoading(false);
     };
 
     useEffect(() => {
       checkAuth();
+
+      const { data: listener } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          setIsAuth(!!session);
+        }
+      );
+
+      return () => {
+        listener.subscription.unsubscribe()
+      };
     }, []);
 
     //--------- LOGGING OUT----------------
   const handleLogout = async () => {
-    try {
-    await api.post("/auth/logout");
-    } catch (err) {
-      console.log(err);
-    }
+    await supabase.auth.signOut();
 
     setIsAuth(false);
     setUser(null);

@@ -1,6 +1,7 @@
 // LOGIN.JSX
 import { useState } from 'react';
 import api from '../services/api'
+import { supabase } from '../supabaseClient';
 
 function Login({ onLoginSuccess, goToSignup }) {
   const [email, setEmail] = useState('');
@@ -13,16 +14,18 @@ function Login({ onLoginSuccess, goToSignup }) {
     setLoading(true);
 
     try {
-      await api.post("/auth/login", {
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
+      if (error) throw error;
+
       setMessage("Login successful");
-      onLoginSuccess();
+      await onLoginSuccess();
 
     } catch (err) {
-      setMessage(err.response?.data?.error || "Login failed");
+      setMessage(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
