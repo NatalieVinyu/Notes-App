@@ -14,7 +14,7 @@ function NotesList({ notes, onUpdate, onDelete, loading }) {
     <ul>
       {notes.map((note) => (
         <NotesItem
-          key={note.id}
+          key={note._id}
           note={note}
           onUpdate={onUpdate}
           onDelete={onDelete}

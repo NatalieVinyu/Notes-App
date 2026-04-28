@@ -39,18 +39,17 @@ function Dashboard() {
     };
 
     const handleUpdate = (id, newContent) => {
-      setNotes(prev => prev.map(note => note.id === id ? { ...note, content: newContent }
+      setNotes(prev => prev.map(note => note._id === id ? { ...note, content: newContent }
         : note
       ));
     };
 
     const handleDelete = (id) => {
-      setNotes(prev => prev.filter(note => note.id !== id));
+      setNotes(prev => [note.note, ...prev]);
     };
 
   return (
     <div>
-      <h1 className='text-3xl pb-8'>Dashboard</h1>
 
       <NotesForm 
         onNoteCreated={handleCreate}
