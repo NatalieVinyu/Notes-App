@@ -39,13 +39,13 @@ function Dashboard() {
     };
 
     const handleUpdate = (id, newContent) => {
-      setNotes(prev => prev.map(note => note._id === id ? { ...note, content: newContent }
+      setNotes(prev => prev.map(note => note.id === id ? { ...note, content: newContent }
         : note
       ));
     };
 
     const handleDelete = (id) => {
-      setNotes(prev => [note.note, ...prev]);
+      setNotes((prev) => prev.filter((note) => note.id !== id));
     };
 
   return (
@@ -66,8 +66,6 @@ function Dashboard() {
         />
       </div>
 
-      
-      
     </div>
   );
 }

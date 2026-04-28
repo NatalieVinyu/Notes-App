@@ -4,6 +4,7 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
+import { BallTriangle } from "react-loader-spinner";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,24 @@ function App() {
     localStorage.removeItem("auth");
   };
 
-    if (loading) return <p>Loading...</p>
+    //REACT-LOADER-SPINNER
+    if (loading) {
+      return (
+        <div className='h-screen flex items-center justify-center'>
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#4fa94d"
+            ariaLabel="ball-triangle-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+        
+      )
+    }
 
     // NOT AUTHENTICATED
     if (!isAuth) {
