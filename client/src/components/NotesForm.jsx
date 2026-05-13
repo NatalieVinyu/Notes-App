@@ -34,8 +34,8 @@ const [loading, setLoading] = useState(false);
         setShowModal(false);
         
       } catch (err) {
-        console.log("STATUS:",err.response?.status);
-        console.log("BACKEND ERROR:",err.response?.status);
+        console.log("STATUS:", err.response?.status);
+        console.log("BACKEND ERROR:", err.response?.data);
         setError("Failed to add note");
       }
       console.log("SENDING", newNote);
